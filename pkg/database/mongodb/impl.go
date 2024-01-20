@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type Impl struct {
+type impl struct {
 	client *mongo.Client
 	config *config.Mongodb
 }
@@ -25,17 +25,17 @@ func NewMongodb(config *config.Mongodb) (database.Database, error) {
 		return nil, err
 	}
 
-	return &Impl{
+	return &impl{
 		client: client,
 		config: config,
 	}, nil
 }
 
-func (im *Impl) getCollection(collectionName string) *mongo.Collection {
+func (im *impl) getCollection(collectionName string) *mongo.Collection {
 	return im.client.Database(im.config.Database).Collection(collectionName)
 }
 
-func (im *Impl) Get(ctx context.Context, table, key string) (interface{}, error) {
+func (im *impl) Get(ctx context.Context, table, key string) (interface{}, error) {
 	collection := im.getCollection(table)
 
 	data, err := collection.Find(ctx, nil)
@@ -46,7 +46,7 @@ func (im *Impl) Get(ctx context.Context, table, key string) (interface{}, error)
 	return data, nil
 }
 
-func (im *Impl) Set(ctx context.Context, table, key string, value interface{}) error {
+func (im *impl) Set(ctx context.Context, table, key string, value interface{}) error {
 	collection := im.getCollection(table)
 
 	_, err := collection.InsertOne(ctx, value)

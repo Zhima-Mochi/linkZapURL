@@ -11,7 +11,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-type Impl struct {
+type impl struct {
 	client *redis.ClusterClient
 	config *config.Redis
 }
@@ -27,13 +27,13 @@ func NewRedis(config *config.Redis) (cache.Cache, error) {
 		return nil, err
 	}
 
-	return &Impl{
+	return &impl{
 		client: client,
 		config: config,
 	}, nil
 }
 
-func (im *Impl) Get(ctx context.Context, key string) (interface{}, error) {
+func (im *impl) Get(ctx context.Context, key string) (interface{}, error) {
 	val, err := im.client.Get(ctx, key).Result()
 	if err == redis.Nil {
 		return nil, cache.ErrNotFound
@@ -50,7 +50,7 @@ func (im *Impl) Get(ctx context.Context, key string) (interface{}, error) {
 	return data, nil
 }
 
-func (im *Impl) Set(ctx context.Context, key string, value interface{}, ttl time.Duration) error {
+func (im *impl) Set(ctx context.Context, key string, value interface{}, ttl time.Duration) error {
 	jsonData, err := json.Marshal(value)
 	if err != nil {
 		return err
