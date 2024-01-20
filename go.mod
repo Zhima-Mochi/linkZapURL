@@ -3,6 +3,7 @@ module github.com/Zhima-Mochi/linkZapURL
 go 1.19
 
 require (
+	github.com/golang/mock v1.6.0
 	github.com/redis/go-redis/v9 v9.4.0
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.13.1
