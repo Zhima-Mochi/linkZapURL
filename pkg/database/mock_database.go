@@ -35,18 +35,17 @@ func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 }
 
 // Get mocks base method.
-func (m *MockDatabase) Get(ctx context.Context, table string, key int64) (interface{}, error) {
+func (m *MockDatabase) Get(ctx context.Context, table string, key int64, result interface{}) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", ctx, table, key)
-	ret0, _ := ret[0].(interface{})
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret := m.ctrl.Call(m, "Get", ctx, table, key, result)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Get indicates an expected call of Get.
-func (mr *MockDatabaseMockRecorder) Get(ctx, table, key interface{}) *gomock.Call {
+func (mr *MockDatabaseMockRecorder) Get(ctx, table, key, result interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockDatabase)(nil).Get), ctx, table, key)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockDatabase)(nil).Get), ctx, table, key, result)
 }
 
 // Set mocks base method.

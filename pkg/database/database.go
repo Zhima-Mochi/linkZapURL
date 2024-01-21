@@ -12,6 +12,6 @@ var (
 )
 
 type Database interface {
-	Get(ctx context.Context, table string, key int64) (interface{}, error)
+	Get(ctx context.Context, table string, key int64, result interface{}) error
 	Set(ctx context.Context, table string, key int64, value interface{}) error
 }

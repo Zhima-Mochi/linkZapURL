@@ -5,6 +5,7 @@ import (
 
 	"github.com/Zhima-Mochi/linkZapURL/config"
 	"github.com/Zhima-Mochi/linkZapURL/pkg/database"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -35,15 +36,17 @@ func (im *impl) getCollection(collectionName string) *mongo.Collection {
 	return im.client.Database(im.config.Database).Collection(collectionName)
 }
 
-func (im *impl) Get(ctx context.Context, table string, key int64) (interface{}, error) {
+func (im *impl) Get(ctx context.Context, table string, key int64, result interface{}) error {
 	collection := im.getCollection(table)
 
-	data, err := collection.Find(ctx, nil)
+	filter := bson.M{"_id": key}
+
+	err := collection.FindOne(ctx, filter).Decode(result)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return data, nil
+	return nil
 }
 
 func (im *impl) Set(ctx context.Context, table string, key int64, value interface{}) error {
