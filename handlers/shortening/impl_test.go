@@ -3,6 +3,7 @@ package shortening
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/Zhima-Mochi/linkZapURL/models"
 	"github.com/Zhima-Mochi/linkZapURL/pkg/database"
@@ -31,13 +32,17 @@ func TestShorten(t *testing.T) {
 		{
 			name:     "success",
 			url:      "https://www.google.com",
-			expireAt: 0,
+			expireAt: 1000,
 			setUp: func(mocks *Mocks) {
+				timeNow = func() time.Time {
+					return time.Unix(10, 0)
+				}
 				mocks.mockDB.EXPECT().Set(mockCTX, collectionName, gomock.Any(), gomock.Any()).Return(nil).Times(1)
 			},
 			check: func(t *testing.T, res *models.URL, err error) {
 				assert.NoError(t, err)
-				assert.NotNil(t, res)
+				assert.Equal(t, "https://www.google.com", res.URL)
+				assert.Equal(t, int64(1000), res.ExpireAt)
 			},
 		},
 		{
@@ -48,9 +53,26 @@ func TestShorten(t *testing.T) {
 			},
 		},
 		{
-			name: "collision",
-			url:  "https://www.google.com",
+			name:     "invalid expire at",
+			url:      "https://www.google.com",
+			expireAt: 0,
 			setUp: func(mocks *Mocks) {
+				timeNow = func() time.Time {
+					return time.Unix(10, 0)
+				}
+			},
+			check: func(t *testing.T, res *models.URL, err error) {
+				assert.ErrorIs(t, err, ErrInvalidExpireAt)
+			},
+		},
+		{
+			name:     "collision",
+			url:      "https://www.google.com",
+			expireAt: 1000,
+			setUp: func(mocks *Mocks) {
+				timeNow = func() time.Time {
+					return time.Unix(10, 0)
+				}
 				mocks.mockDB.EXPECT().Set(mockCTX, collectionName, gomock.Any(), gomock.Any()).Return(database.ErrCollision).Times(1)
 			},
 			check: func(t *testing.T, res *models.URL, err error) {
@@ -60,6 +82,9 @@ func TestShorten(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		originalTimeNow := timeNow
+		defer func() { timeNow = originalTimeNow }()
+
 		t.Run(tt.name, func(t *testing.T) {
 			// Create a controller to manage the mock.
 			ctrl := gomock.NewController(t)

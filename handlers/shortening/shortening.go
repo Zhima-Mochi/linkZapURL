@@ -9,6 +9,8 @@ import (
 
 var (
 	ErrEmptyURL = errors.New("shortening: empty url")
+
+	ErrInvalidExpireAt = errors.New("shortening: invalid expire at")
 )
 
 type Shortening interface {

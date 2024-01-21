@@ -19,17 +19,6 @@ var (
 	timeNow = time.Now
 
 	seq uint8
-
-	encode = func(num int64) string {
-		codes := make([]byte, 0, 7)
-
-		for num > 0 {
-			codes = append(codes, base58alphabet[num%58])
-			num /= 58
-		}
-
-		return string(codes)
-	}
 )
 
 type impl struct {
@@ -77,11 +66,14 @@ func (im *impl) Shorten(ctx context.Context, url string, expireAt int64) (*model
 		return nil, ErrEmptyURL
 	}
 
+	if expireAt < timeNow().Unix() {
+		return nil, ErrInvalidExpireAt
+	}
+
 	id := im.generateID()
 
 	doc := &models.URL{
 		ID:       id,
-		Code:     encode(id),
 		URL:      url,
 		ExpireAt: expireAt,
 	}
@@ -90,6 +82,8 @@ func (im *impl) Shorten(ctx context.Context, url string, expireAt int64) (*model
 	if err != nil {
 		return nil, err
 	}
+
+	doc.FillCode()
 
 	return doc, nil
 }
