@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 	"time"
 
@@ -24,7 +25,12 @@ var (
 	endpoint string
 )
 
-func init() {
+type Handler struct {
+	shortening  shortening.Shortening
+	redirection redirection.Redirection
+}
+
+func setEnv() {
 	machineIDStr := os.Getenv("MACHINE_ID")
 	if machineIDStr == "" {
 		log.Fatal("MACHINE_ID is not set")
@@ -51,14 +57,13 @@ func init() {
 		panic("ENDPOINT is not set")
 	}
 	log.Printf("Endpoint: %s", endpoint)
-}
 
-type Handler struct {
-	shortening  shortening.Shortening
-	redirection redirection.Redirection
+	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
 func main() {
+	setEnv()
+
 	config, err := config.GetConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -94,6 +99,8 @@ func main() {
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	router.Run("")
 }
 
 type ShortenRequest struct {
