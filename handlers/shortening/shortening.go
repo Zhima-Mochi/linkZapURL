@@ -3,6 +3,8 @@ package shortening
 import (
 	"context"
 	"errors"
+
+	"github.com/Zhima-Mochi/linkZapURL/models"
 )
 
 var (
@@ -10,5 +12,5 @@ var (
 )
 
 type Shortening interface {
-	Shorten(ctx context.Context, url string) (string, error)
+	Shorten(ctx context.Context, url string, expireAt int64) (*models.URL, error)
 }

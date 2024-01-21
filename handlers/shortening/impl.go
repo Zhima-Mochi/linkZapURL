@@ -5,13 +5,14 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Zhima-Mochi/linkZapURL/models"
 	"github.com/Zhima-Mochi/linkZapURL/pkg/database"
 )
 
 const (
 	base58alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
 
-	collectionName = "shortening"
+	collectionName = "url"
 )
 
 var (
@@ -61,27 +62,34 @@ func (im *impl) nextSeq(now int64) uint8 {
 }
 
 // generateID generates a unique ID based on the current time, machine ID and sequence number.
-func (im *impl) generateID() string {
+func (im *impl) generateID() int64 {
 	now := timeNow().UnixMilli()
 	num := int64(0)
 	num |= (now & 0x1FFFFFF) << 16
 	num |= int64(im.machineID) << 8
 	num |= int64(im.nextSeq(now))
 
-	return encode(num)
+	return num
 }
 
-func (im *impl) Shorten(ctx context.Context, url string) (string, error) {
+func (im *impl) Shorten(ctx context.Context, url string, expireAt int64) (*models.URL, error) {
 	if url == "" {
-		return "", ErrEmptyURL
+		return nil, ErrEmptyURL
 	}
 
 	id := im.generateID()
 
-	err := im.database.Set(ctx, collectionName, id, url)
-	if err != nil {
-		return "", err
+	doc := &models.URL{
+		ID:       id,
+		Code:     encode(id),
+		URL:      url,
+		ExpireAt: expireAt,
 	}
 
-	return id, nil
+	err := im.database.Set(ctx, collectionName, id, doc)
+	if err != nil {
+		return nil, err
+	}
+
+	return doc, nil
 }

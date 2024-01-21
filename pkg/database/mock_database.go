@@ -35,7 +35,7 @@ func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 }
 
 // Get mocks base method.
-func (m *MockDatabase) Get(ctx context.Context, table, key string) (interface{}, error) {
+func (m *MockDatabase) Get(ctx context.Context, table string, key int64) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Get", ctx, table, key)
 	ret0, _ := ret[0].(interface{})
@@ -50,7 +50,7 @@ func (mr *MockDatabaseMockRecorder) Get(ctx, table, key interface{}) *gomock.Cal
 }
 
 // Set mocks base method.
-func (m *MockDatabase) Set(ctx context.Context, table, key string, value interface{}) error {
+func (m *MockDatabase) Set(ctx context.Context, table string, key int64, value interface{}) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Set", ctx, table, key, value)
 	ret0, _ := ret[0].(error)

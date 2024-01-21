@@ -35,7 +35,7 @@ func (im *impl) getCollection(collectionName string) *mongo.Collection {
 	return im.client.Database(im.config.Database).Collection(collectionName)
 }
 
-func (im *impl) Get(ctx context.Context, table, key string) (interface{}, error) {
+func (im *impl) Get(ctx context.Context, table string, key int64) (interface{}, error) {
 	collection := im.getCollection(table)
 
 	data, err := collection.Find(ctx, nil)
@@ -46,7 +46,7 @@ func (im *impl) Get(ctx context.Context, table, key string) (interface{}, error)
 	return data, nil
 }
 
-func (im *impl) Set(ctx context.Context, table, key string, value interface{}) error {
+func (im *impl) Set(ctx context.Context, table string, key int64, value interface{}) error {
 	collection := im.getCollection(table)
 
 	_, err := collection.InsertOne(ctx, value)

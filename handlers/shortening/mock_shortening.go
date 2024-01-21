@@ -8,6 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	models "github.com/Zhima-Mochi/linkZapURL/models"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -35,16 +36,16 @@ func (m *MockShortening) EXPECT() *MockShorteningMockRecorder {
 }
 
 // Shorten mocks base method.
-func (m *MockShortening) Shorten(ctx context.Context, url string) (string, error) {
+func (m *MockShortening) Shorten(ctx context.Context, url string, expireAt int64) (*models.URL, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Shorten", ctx, url)
-	ret0, _ := ret[0].(string)
+	ret := m.ctrl.Call(m, "Shorten", ctx, url, expireAt)
+	ret0, _ := ret[0].(*models.URL)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Shorten indicates an expected call of Shorten.
-func (mr *MockShorteningMockRecorder) Shorten(ctx, url interface{}) *gomock.Call {
+func (mr *MockShorteningMockRecorder) Shorten(ctx, url, expireAt interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Shorten", reflect.TypeOf((*MockShortening)(nil).Shorten), ctx, url)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Shorten", reflect.TypeOf((*MockShortening)(nil).Shorten), ctx, url, expireAt)
 }
