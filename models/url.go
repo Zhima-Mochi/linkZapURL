@@ -1,13 +1,21 @@
 package models
 
+import "errors"
+
 const (
 	base58alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
 )
 
 var (
+	ErrInvalidID = errors.New("models: invalid id")
+
+	ErrInvalidCode = errors.New("models: invalid code")
+)
+
+var (
 	base58alphabetMap = map[byte]int64{}
 
-	encode = func(num int64) string {
+	Encode = func(num int64) (string, error) {
 		codes := make([]byte, 0, 7)
 
 		for num > 0 {
@@ -15,17 +23,25 @@ var (
 			num /= 58
 		}
 
-		return string(codes)
+		if len(codes) != 7 {
+			return "", ErrInvalidID
+		}
+
+		return string(codes), nil
 	}
 
-	decode = func(code string) int64 {
+	Decode = func(code string) (int64, error) {
 		var num int64
 
 		for i := 0; i < len(code); i++ {
-			num = num*58 + base58alphabetMap[code[i]]
+			if n, ok := base58alphabetMap[code[i]]; !ok {
+				return 0, ErrInvalidCode
+			} else {
+				num = num*58 + n
+			}
 		}
 
-		return num
+		return num, nil
 	}
 )
 
@@ -42,12 +58,22 @@ type URL struct {
 	ExpireAt int64  `json:"expireAt" bson:"expireAt"`
 }
 
-func (u *URL) FillCode() string {
-	u.Code = encode(u.ID)
-	return u.Code
+func (u *URL) FillCode() (string, error) {
+	code, err := Encode(u.ID)
+	if err != nil {
+		return "", err
+	}
+
+	u.Code = code
+	return u.Code, nil
 }
 
-func (u *URL) FillID() int64 {
-	u.ID = decode(u.Code)
-	return u.ID
+func (u *URL) FillID() (int64, error) {
+	id, err := Decode(u.Code)
+	if err != nil {
+		return 0, err
+	}
+
+	u.ID = id
+	return u.ID, nil
 }

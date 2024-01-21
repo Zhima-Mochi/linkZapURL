@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=mock_shortening.go -package=shortening -source=shortening.go
 package shortening
 
 import (

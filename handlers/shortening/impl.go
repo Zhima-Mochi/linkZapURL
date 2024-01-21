@@ -10,8 +10,6 @@ import (
 )
 
 const (
-	base58alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
-
 	collectionName = "url"
 )
 
@@ -83,7 +81,10 @@ func (im *impl) Shorten(ctx context.Context, url string, expireAt int64) (*model
 		return nil, err
 	}
 
-	doc.FillCode()
+	_, err = doc.FillCode()
+	if err != nil {
+		return nil, err
+	}
 
 	return doc, nil
 }
