@@ -16,7 +16,6 @@ import (
 
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/swag/example/basic/docs"
 )
 
 var (
@@ -88,19 +87,18 @@ func main() {
 	}
 
 	router := gin.Default()
-	docs.SwaggerInfo.BasePath = "/api/v1"
-	apiV1 := router.Group("/api/v1")
+	router.GET("/:code", handler.Redirect)
 
-	apiV1.POST("/shorten", handler.Shorten)
-	apiV1.GET("/:code", handler.Redirect)
+	apiV1 := router.Group("/api/v1")
+	apiV1.POST("/urls", handler.Shorten)
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 
 type ShortenRequest struct {
-	URL           string `json:"url" binding:"required"`
-	ExpireAt      string `json:"expireAt" binding:"required"`
+	URL           string `json:"url" binding:"required" example:"https://example.com"`
+	ExpireAt      string `json:"expireAt" binding:"required" example:"2021-02-08T09:20:41Z"`
 	ExpireAtInt64 int64  `json:"-" binding:"-"`
 }
 
@@ -120,8 +118,8 @@ func (r *ShortenRequest) Bind(g *gin.Context) error {
 }
 
 type ShortenResponse struct {
-	ID       string `json:"id"`
-	ShortURL string `json:"shortURL"`
+	ID       string `json:"id" example:"5abcABC"`
+	ShortURL string `json:"shortURL" example:"https://localhost/5abcABC"`
 }
 
 // @Summary Shorten a URL
@@ -131,9 +129,9 @@ type ShortenResponse struct {
 // @Produce json
 // @Param body body ShortenRequest true "Shorten Request"
 // @Success 200 {object} ShortenResponse
-// @Failure 400 {object} map[string]
-// @Failure 500 {object} map[string]
-// @Router /shorten [post]
+// @Failure 400 {object} map[string]any
+// @Failure 500 {object} map[string]any
+// @Router /api/v1/urls [post]
 func (h *Handler) Shorten(g *gin.Context) {
 	ctx := g.Request.Context()
 
@@ -161,9 +159,9 @@ func (h *Handler) Shorten(g *gin.Context) {
 // @Description Redirects to the original URL.
 // @Tags URL Redirection
 // @Param code path string true "Shortened URL Code"
-// @Success 301 string string
-// @Failure 404 {object} map[string]
-// @Failure 500 {object} map[string]
+// @Success 301 string string "Moved Permanently"
+// @Failure 404 {object} map[string]any
+// @Failure 500 {object} map[string]any
 // @Router /{code} [get]
 func (h *Handler) Redirect(g *gin.Context) {
 	ctx := g.Request.Context()

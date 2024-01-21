@@ -2,8 +2,10 @@ definitions:
   main.ShortenRequest:
     properties:
       expireAt:
+        example: "2021-02-08T09:20:41Z"
         type: string
       url:
+        example: https://example.com
         type: string
     required:
     - expireAt
@@ -12,8 +14,10 @@ definitions:
   main.ShortenResponse:
     properties:
       id:
+        example: 5abcABC
         type: string
       shortURL:
+        example: https://localhost/5abcABC
         type: string
     type: object
 info:
@@ -46,7 +50,7 @@ paths:
       summary: Redirect to a URL
       tags:
       - URL Redirection
-  /shorten:
+  /api/v1/urls:
     post:
       consumes:
       - application/json

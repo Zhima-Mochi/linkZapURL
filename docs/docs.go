@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/shorten": {
+        "/api/v1/urls": {
             "post": {
                 "description": "Shortens a given URL and provides an expiration time.",
                 "consumes": [
@@ -113,10 +113,12 @@ const docTemplate = `{
             ],
             "properties": {
                 "expireAt": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2021-02-08T09:20:41Z"
                 },
                 "url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://example.com"
                 }
             }
         },
@@ -124,10 +126,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "5abcABC"
                 },
                 "shortURL": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://localhost/5abcABC"
                 }
             }
         }
