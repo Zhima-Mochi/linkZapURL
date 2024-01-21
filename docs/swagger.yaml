@@ -1,0 +1,81 @@
+definitions:
+  main.ShortenRequest:
+    properties:
+      expireAt:
+        type: string
+      url:
+        type: string
+    required:
+    - expireAt
+    - url
+    type: object
+  main.ShortenResponse:
+    properties:
+      id:
+        type: string
+      shortURL:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /{code}:
+    get:
+      description: Redirects to the original URL.
+      parameters:
+      - description: Shortened URL Code
+        in: path
+        name: code
+        required: true
+        type: string
+      responses:
+        "301":
+          description: Moved Permanently
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Redirect to a URL
+      tags:
+      - URL Redirection
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      description: Shortens a given URL and provides an expiration time.
+      parameters:
+      - description: Shorten Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/main.ShortenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ShortenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Shorten a URL
+      tags:
+      - URL Shortening
+swagger: "2.0"
