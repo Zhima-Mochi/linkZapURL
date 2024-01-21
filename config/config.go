@@ -19,6 +19,8 @@ type Mongodb struct {
 	URI         string `yaml:"uri"`
 	Database    string `yaml:"database"`
 	MaxPoolSize uint64 `yaml:"max_pool_size"`
+	USERNAME    string `yaml:"username"`
+	PASSWORD    string `yaml:"password"`
 }
 
 type Redis struct {

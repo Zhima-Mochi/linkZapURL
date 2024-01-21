@@ -39,7 +39,7 @@ func (im *impl) getCollection(collectionName string) *mongo.Collection {
 func (im *impl) Get(ctx context.Context, table string, key int64, result interface{}) error {
 	collection := im.getCollection(table)
 
-	filter := bson.M{"_id": key}
+	filter := bson.M{"ID": key}
 
 	err := collection.FindOne(ctx, filter).Decode(result)
 	if err != nil {
