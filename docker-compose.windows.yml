@@ -9,7 +9,7 @@ services:
     image: linkzapurl-server
     container_name: linkzapurl-server-1
     volumes:
-      - "./docker/config.yaml:/config/config.yaml"
+      - "./docker/config.windows.yaml:/config/config.yaml"
     restart: always
     ports:
       - "9000:8080"

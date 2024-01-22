@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Stop and remove containers
-docker-compose down -v
+docker-compose -f docker-compose.windows.yml down -v
 
 # Build Docker images
-docker-compose build
+docker-compose -f docker-compose.windows.yml build
 
 # Start all services
-docker-compose up -d
+docker-compose -f docker-compose.windows.yml up -d
