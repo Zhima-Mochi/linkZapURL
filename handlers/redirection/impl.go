@@ -38,7 +38,7 @@ func NewRedirection(cache cache.Cache, database database.Database) Redirection {
 func (im *impl) Redirect(ctx context.Context, code string) (*models.URL, error) {
 	// Validate the code.
 	if _, err := models.Decode(code); err != nil {
-		return nil, err
+		return nil, ErrInvalidCode
 	}
 
 	now := timeNow().Unix()

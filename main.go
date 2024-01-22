@@ -15,6 +15,7 @@ import (
 	"github.com/Zhima-Mochi/linkZapURL/pkg/database/mongodb"
 	"github.com/gin-gonic/gin"
 
+	doc "github.com/Zhima-Mochi/linkZapURL/docs"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -100,6 +101,11 @@ func main() {
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
+	// swagger doc
+	doc.SwaggerInfo.Title = "linkZapURL"
+	doc.SwaggerInfo.Description = "A URL shortener service."
+	doc.SwaggerInfo.Version = "1.0"
+
 	router.Run(":8080")
 }
 
@@ -176,7 +182,7 @@ func (h *Handler) Redirect(g *gin.Context) {
 	code := g.Param("code")
 
 	url, err := h.redirection.Redirect(ctx, code)
-	if err == redirection.ErrNotFound || err == redirection.ErrExpired {
+	if err == redirection.ErrNotFound || err == redirection.ErrExpired || err == redirection.ErrInvalidCode {
 		g.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	} else if err != nil {

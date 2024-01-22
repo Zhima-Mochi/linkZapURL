@@ -13,17 +13,17 @@ import (
 )
 
 type impl struct {
-	client *redis.ClusterClient
+	client *redis.Client
 	config *config.Redis
 }
 
 func NewRedis(config *config.Redis) (cache.Cache, error) {
-	client := redis.NewClusterClient(&redis.ClusterOptions{
-		Addrs: config.Addrs,
+	client := redis.NewClient(&redis.Options{
+		Addr: config.Addrs[0],
 	})
 
 	// Ping the primary
-	_, err := client.Ping(context.Background()).Result()
+	err := client.Ping(context.Background()).Err()
 	if err != nil {
 		return nil, err
 	}

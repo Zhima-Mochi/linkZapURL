@@ -6,11 +6,7 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-RUN go install github.com/swaggo/swag/cmd/swag@v1.16.2
-
 COPY . .
-
-RUN swag init
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 

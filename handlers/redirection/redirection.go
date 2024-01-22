@@ -12,6 +12,8 @@ var (
 	ErrExpired = errors.New("redirection: expired")
 
 	ErrNotFound = errors.New("redirection: not found")
+
+	ErrInvalidCode = errors.New("redirection: invalid code")
 )
 
 type Redirection interface {
