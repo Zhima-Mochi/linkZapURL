@@ -70,14 +70,15 @@ func TestRedirect(t *testing.T) {
 					return time.Unix(10, 0)
 				}
 				mocks.mockCache.EXPECT().Get(mockCTX, "5abcDEF").Return(nil, cache.ErrNotFound).Times(1)
+				mocks.mockCache.EXPECT().Set(mockCTX, "5abcDEF", nil, nonExistedCacheTTL).Return(nil).Times(1)
 
-				doc := &models.URL{
+				u := &models.URL{
 					Code: "5abcDEF",
 				}
-				id, err := doc.FillID()
+				err := u.ToBSON()
 				assert.NoError(t, err)
 
-				mocks.mockDB.EXPECT().Get(mockCTX, collectionName, id, doc).Return(database.ErrNotFound).Times(1)
+				mocks.mockDB.EXPECT().Get(mockCTX, collectionName, u.ID, u).Return(database.ErrNotFound).Times(1)
 			},
 			check: func(t *testing.T, res *models.URL, err error) {
 				assert.ErrorIs(t, err, ErrNotFound)
@@ -86,12 +87,6 @@ func TestRedirect(t *testing.T) {
 		{
 			name: "invalid code",
 			code: "05abcDE",
-			setUp: func(mocks *Mocks) {
-				timeNow = func() time.Time {
-					return time.Unix(10, 0)
-				}
-				mocks.mockCache.EXPECT().Get(mockCTX, "05abcDE").Return(nil, cache.ErrNotFound).Times(1)
-			},
 			check: func(t *testing.T, res *models.URL, err error) {
 				assert.ErrorIs(t, err, models.ErrInvalidCode)
 			},

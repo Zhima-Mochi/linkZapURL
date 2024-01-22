@@ -31,6 +31,10 @@ var (
 	}
 
 	Decode = func(code string) (int64, error) {
+		if len(code) != 7 {
+			return 0, ErrInvalidCode
+		}
+
 		var num int64
 
 		for i := 0; i < len(code); i++ {
@@ -53,28 +57,58 @@ func init() {
 
 type URL struct {
 	ID       int64  `json:"-" bson:"ID"`
-	Seq      int32  `json:"-" bson:"seq"`
+	Seq      uint8  `json:"-" bson:"seq"`
 	Code     string `json:"code" bson:"-"`
 	URL      string `json:"url" bson:"url"`
 	ExpireAt int64  `json:"expireAt" bson:"expireAt"`
 }
 
-func (u *URL) FillCode() (string, error) {
+func (u *URL) ToBSON() error {
+	u.Seq = getSeq(u)
+
+	return nil
+}
+
+func (u *URL) ToJSON() error {
+	code, err := getCode(u)
+	if err != nil {
+		return err
+	}
+
+	u.Code = code
+
+	return nil
+}
+
+func (u *URL) ToMOodel() error {
+	id, err := getID(u)
+	if err != nil {
+		return err
+	}
+
+	u.ID = id
+
+	return nil
+}
+
+func getCode(u *URL) (string, error) {
 	code, err := Encode(u.ID)
 	if err != nil {
 		return "", err
 	}
 
-	u.Code = code
-	return u.Code, nil
+	return code, nil
 }
 
-func (u *URL) FillID() (int64, error) {
+func getSeq(u *URL) uint8 {
+	return uint8(u.ID & 0xFF)
+}
+
+func getID(u *URL) (int64, error) {
 	id, err := Decode(u.Code)
 	if err != nil {
 		return 0, err
 	}
 
-	u.ID = id
-	return u.ID, nil
+	return id, nil
 }

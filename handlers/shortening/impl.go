@@ -70,21 +70,26 @@ func (im *impl) Shorten(ctx context.Context, url string, expireAt int64) (*model
 
 	id := im.generateID()
 
-	doc := &models.URL{
+	u := &models.URL{
 		ID:       id,
 		URL:      url,
 		ExpireAt: expireAt,
 	}
 
-	err := im.database.Set(ctx, collectionName, id, doc)
+	err := u.ToBSON()
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = doc.FillCode()
+	err = im.database.Set(ctx, collectionName, id, u)
 	if err != nil {
 		return nil, err
 	}
 
-	return doc, nil
+	err = u.ToJSON()
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
