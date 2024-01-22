@@ -23,8 +23,12 @@ var (
 			num /= 58
 		}
 
-		if len(codes) != 7 {
+		if len(codes) > 7 {
 			return "", ErrInvalidID
+		}
+
+		for len(codes) < 7 {
+			codes = append(codes, base58alphabet[0])
 		}
 
 		return string(codes), nil
@@ -80,7 +84,7 @@ func (u *URL) ToJSON() error {
 	return nil
 }
 
-func (u *URL) ToMOodel() error {
+func (u *URL) ToModel() error {
 	id, err := getID(u)
 	if err != nil {
 		return err

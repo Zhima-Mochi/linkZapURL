@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Zhima-Mochi/linkZapURL/models"
+	"github.com/Zhima-Mochi/linkZapURL/pkg/cache"
 	"github.com/Zhima-Mochi/linkZapURL/pkg/database"
 	gomock "github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -18,7 +19,8 @@ var (
 )
 
 type Mocks struct {
-	mockDB *database.MockDatabase
+	mockDB    *database.MockDatabase
+	mockCache *cache.MockCache
 }
 
 func TestShorten(t *testing.T) {
@@ -38,6 +40,7 @@ func TestShorten(t *testing.T) {
 					return time.Unix(10, 0)
 				}
 				mocks.mockDB.EXPECT().Set(mockCTX, collectionName, gomock.Any(), gomock.Any()).Return(nil).Times(1)
+				mocks.mockCache.EXPECT().Del(mockCTX, gomock.Any()).Return(nil).Times(1)
 			},
 			check: func(t *testing.T, res *models.URL, err error) {
 				assert.NoError(t, err)
@@ -92,11 +95,12 @@ func TestShorten(t *testing.T) {
 
 			// Create the mocks.
 			mocks := &Mocks{
-				mockDB: database.NewMockDatabase(ctrl),
+				mockDB:    database.NewMockDatabase(ctrl),
+				mockCache: cache.NewMockCache(ctrl),
 			}
 
 			// Create the object we are testing.
-			shortening := NewShortening(mockMachineID, mocks.mockDB)
+			shortening := NewShortening(mockMachineID, mocks.mockDB, mocks.mockCache)
 
 			// Set up the mock expectations.
 			if tt.setUp != nil {

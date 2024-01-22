@@ -61,3 +61,7 @@ func (im *impl) Set(ctx context.Context, key string, value interface{}, ttl time
 
 	return im.client.Set(ctx, key, jsonData, ttl).Err()
 }
+
+func (im *impl) Del(ctx context.Context, key string) error {
+	return im.client.Del(ctx, key).Err()
+}

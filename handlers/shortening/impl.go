@@ -2,10 +2,12 @@ package shortening
 
 import (
 	"context"
+	"log"
 	"sync"
 	"time"
 
 	"github.com/Zhima-Mochi/linkZapURL/models"
+	"github.com/Zhima-Mochi/linkZapURL/pkg/cache"
 	"github.com/Zhima-Mochi/linkZapURL/pkg/database"
 )
 
@@ -23,13 +25,16 @@ type impl struct {
 	machineID     uint8
 	lastTimestamp int64
 	database      database.Database
+	cache         cache.Cache
 	mutex         sync.Mutex
 }
 
-func NewShortening(machineID uint8, database database.Database) Shortening {
+func NewShortening(machineID uint8, database database.Database, cache cache.Cache) Shortening {
 	return &impl{
 		machineID: machineID,
 		database:  database,
+		cache:     cache,
+		mutex:     sync.Mutex{},
 	}
 }
 
@@ -84,6 +89,11 @@ func (im *impl) Shorten(ctx context.Context, url string, expireAt int64) (*model
 	err = im.database.Set(ctx, collectionName, id, u)
 	if err != nil {
 		return nil, err
+	}
+
+	err = im.cache.Del(ctx, u.Code)
+	if err != nil {
+		log.Println("Failed to delete code from cache:", err)
 	}
 
 	err = u.ToJSON()

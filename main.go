@@ -82,7 +82,7 @@ func main() {
 		panic(err)
 	}
 
-	shortening := shortening.NewShortening(machineID, database)
+	shortening := shortening.NewShortening(machineID, database, cache)
 
 	redirection := redirection.NewRedirection(cache, database)
 
