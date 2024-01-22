@@ -1,16 +1,14 @@
 mongodb:
-  uri: mongodb://mongo-node-1:27017,mongo-node-2:27017,mongo-node-3:27017/?replicaSet=rs0
+  uri: mongodb://root:password@host.docker.internal:27117,host.docker.internal:27118/
   database: linkZapURL
-  username: root
-  password: password
 
 redis:
   addrs:
-    - redis-node-1:6379
-    - redis-node-2:6379
-    - redis-node-3:6379
-    - redis-node-4:6379
-    - redis-node-5:6379
-    - redis-node-6:6379
+    - host.docker.internal:7000
+    - host.docker.internal:7001
+    - host.docker.internal:7002
+    - host.docker.internal:7003
+    - host.docker.internal:7004
+    - host.docker.internal:7005
   password: ""
   db: 0

@@ -15,6 +15,7 @@ services:
       - ./scripts:/scripts
       - mongodb_cluster_router01_db:/data/db
       - mongodb_cluster_router01_config:/data/configdb
+
   router02:
     build: 
       context: mongodb-build

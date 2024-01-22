@@ -70,13 +70,13 @@ func main() {
 		panic(err)
 	}
 
-	cache, err := redis.NewRedis(config.Redis)
+	database, err := mongodb.NewMongodb(config.Mongodb)
 	if err != nil {
 		log.Fatal(err)
 		panic(err)
 	}
 
-	database, err := mongodb.NewMongodb(config.Mongodb)
+	cache, err := redis.NewRedis(config.Redis)
 	if err != nil {
 		log.Fatal(err)
 		panic(err)
