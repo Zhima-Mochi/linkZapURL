@@ -88,7 +88,7 @@ func TestRedirect(t *testing.T) {
 			name: "invalid code",
 			code: "05abcDE",
 			check: func(t *testing.T, res *models.URL, err error) {
-				assert.ErrorIs(t, err, models.ErrInvalidCode)
+				assert.ErrorIs(t, err, ErrInvalidCode)
 			},
 		},
 	}

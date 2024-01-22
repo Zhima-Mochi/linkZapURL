@@ -20,7 +20,7 @@ jobs:
 
     - name: Run golint
       run: |
-        go get -u golang.org/x/lint/golint
+        go install golang.org/x/lint/golint@latest
         golint ./...
 
     - name: Run tests
