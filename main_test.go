@@ -61,7 +61,7 @@ func TestShorten(t *testing.T) {
 				assert.Equal(t, "1", res.ID)
 				assert.Equal(t, "https://localhost/1", res.ShortURL)
 			},
-			expCode: http.StatusOK,
+			expCode: http.StatusCreated,
 		},
 		{
 			name: "empty url",

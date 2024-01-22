@@ -1,16 +1,16 @@
 mongodb:
-  uri: mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0
+  uri: mongodb://mongo-node-1:27017,mongo-node-2:27017,mongo-node-3:27017/?replicaSet=rs0
   database: linkZapURL
   username: root
   password: password
 
 redis:
   addrs:
-    - localhost:7000
-    - localhost:7001
-    - localhost:7002
-    - localhost:7003
-    - localhost:7004
-    - localhost:7005
+    - redis-node-1:6379
+    - redis-node-2:6379
+    - redis-node-3:6379
+    - redis-node-4:6379
+    - redis-node-5:6379
+    - redis-node-6:6379
   password: ""
   db: 0

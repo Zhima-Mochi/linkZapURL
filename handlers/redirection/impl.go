@@ -2,6 +2,7 @@ package redirection
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/Zhima-Mochi/linkZapURL/models"
@@ -45,6 +46,8 @@ func (im *impl) Redirect(ctx context.Context, code string) (*models.URL, error) 
 
 		return val, nil
 	}
+
+	log.Println("Cache miss")
 
 	// Check if the code is in the database.
 	doc := &models.URL{

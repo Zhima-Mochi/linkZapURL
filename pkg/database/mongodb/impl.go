@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"log"
 
 	"github.com/Zhima-Mochi/linkZapURL/config"
 	"github.com/Zhima-Mochi/linkZapURL/pkg/database"
@@ -25,6 +26,8 @@ func NewMongodb(config *config.Mongodb) (database.Database, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println("Connected to MongoDB!")
 
 	return &impl{
 		client: client,

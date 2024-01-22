@@ -100,7 +100,7 @@ func main() {
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	router.Run("")
+	router.Run(":8080")
 }
 
 type ShortenRequest struct {
@@ -159,7 +159,7 @@ func (h *Handler) Shorten(g *gin.Context) {
 		ShortURL: endpoint + "/" + url.Code,
 	}
 
-	g.JSON(200, resp)
+	g.JSON(http.StatusCreated, resp)
 }
 
 // @Summary Redirect to a URL

@@ -1,0 +1,113 @@
+version: '3.9'
+
+services:
+
+  redis-node-1:
+    image: redis:7.2.4
+    container_name: redis-node-1 
+    networks:
+      - redis-cluster
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-node-timeout 5000
+    restart: always
+    ports:
+      - "7000:6379"
+
+  redis-node-2:
+    image: redis:7.2.4
+    container_name: redis-node-2 
+    networks:
+      - redis-cluster
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-node-timeout 5000
+    restart: always
+    ports:
+      - "7001:6379"
+  
+  redis-node-3:
+    image: redis:7.2.4
+    container_name: redis-node-3 
+    networks:
+      - redis-cluster
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-node-timeout 5000
+    restart: always
+    ports:
+      - "7002:6379"
+
+  redis-node-4:
+    image: redis:7.2.4
+    container_name: redis-node-4 
+    networks:
+      - redis-cluster
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-node-timeout 5000
+    restart: always
+    ports:
+      - "7003:6379"
+  
+  redis-node-5:
+    image: redis:7.2.4
+    container_name: redis-node-5 
+    networks:
+      - redis-cluster
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-node-timeout 5000
+    restart: always
+    ports:
+      - "7004:6379"
+  
+  redis-node-6:
+    image: redis:7.2.4
+    container_name: redis-node-6 
+    networks:
+      - redis-cluster
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-node-timeout 5000
+    restart: always
+    ports:
+      - "7005:6379"
+
+  redis-cluster-init:
+    image: redis:7.2.4
+    networks:
+      - redis-cluster
+    depends_on:
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+      - redis-node-6
+    entrypoint: /bin/bash
+    command: >
+      -c "redis-cli --cluster create redis-node-1:6379 redis-node-2:6379 redis-node-3:6379 redis-node-4:6379 redis-node-5:6379 redis-node-6:6379 --cluster-replicas 1"
+
+  linkzapurl-server-1:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    image: linkzapurl-server
+    container_name: linkzapurl-server-1
+    volumes:
+      - "./config.yaml:/config/config.yaml"
+    restart: always
+    networks:
+      - mongo-cluster
+      - redis-cluster
+      - linkzapurl-network
+    ports:
+      - "8080:8080"
+    environment:
+      MACHINE_ID: 1
+      ENDPOINT: http://localhost
+    depends_on:
+      - mongo-cluster-init
+      - redis-cluster-init
+
+volumes:
+  mongo-data-1:
+  mongo-data-2:
+  mongo-data-3:
+
+networks:
+  mongo-cluster:
+    driver: bridge
+  redis-cluster:
+    driver: bridge
+  linkzapurl-network:
+    driver: bridge

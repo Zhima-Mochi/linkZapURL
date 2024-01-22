@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"encoding/json"
@@ -26,6 +27,8 @@ func NewRedis(config *config.Redis) (cache.Cache, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Println("Connected to Redis!")
 
 	return &impl{
 		client: client,
