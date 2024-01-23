@@ -46,21 +46,20 @@ func NewRedis(config *config.Redis) (cache.Cache, error) {
 	}, nil
 }
 
-func (im *impl) Get(ctx context.Context, key string) (interface{}, error) {
+func (im *impl) Get(ctx context.Context, key string, result interface{}) error {
 	val, err := im.client.Get(ctx, key).Result()
 	if err == redis.Nil {
-		return nil, cache.ErrNotFound
+		return cache.ErrNotFound
 	} else if err != nil {
-		return nil, err
+		return err
 	}
 
-	var data interface{}
-	err = json.Unmarshal([]byte(val), &data)
+	err = json.Unmarshal([]byte(val), result)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return data, nil
+	return nil
 }
 
 func (im *impl) Set(ctx context.Context, key string, value interface{}, ttl time.Duration) error {

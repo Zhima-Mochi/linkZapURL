@@ -44,25 +44,25 @@ func (im *impl) Redirect(ctx context.Context, code string) (*models.URL, error) 
 	now := timeNow().Unix()
 
 	// Check if the code is in the cache.
-	if b, err := im.cache.Get(ctx, code); err == nil {
-		val := b.(*models.URL)
-
+	u := &models.URL{}
+	if err := im.cache.Get(ctx, code, u); err == nil {
+		log.Println("Cache hit")
 		// non-existent codes are set to nil in the cache.
-		if val == nil {
+		if u.Code == "" {
 			return nil, ErrNotFound
 		}
 
-		if val.ExpireAt < now {
+		if u.ExpireAt < now {
 			return nil, ErrExpired
 		}
 
-		return val, nil
+		return u, nil
 	}
 
 	log.Println("Cache miss")
 
 	// Check if the code is in the database.
-	u := &models.URL{
+	u = &models.URL{
 		Code: code,
 	}
 

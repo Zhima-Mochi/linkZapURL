@@ -35,10 +35,15 @@ func TestRedirect(t *testing.T) {
 				timeNow = func() time.Time {
 					return time.Unix(10, 0)
 				}
-				mocks.mockCache.EXPECT().Get(mockCTX, "5abcDEF").Return(&models.URL{
-					URL:      "https://www.google.com",
-					ExpireAt: 1000,
-				}, nil).Times(1)
+
+				mocks.mockCache.EXPECT().Get(mockCTX, "5abcDEF", gomock.Any()).DoAndReturn(func(ctx context.Context, code string, result interface{}) error {
+					*result.(*models.URL) = models.URL{
+						Code:     "5abcDEF",
+						URL:      "https://www.google.com",
+						ExpireAt: 1000,
+					}
+					return nil
+				}).Times(1)
 			},
 			check: func(t *testing.T, res *models.URL, err error) {
 				assert.NoError(t, err)
@@ -53,10 +58,14 @@ func TestRedirect(t *testing.T) {
 				timeNow = func() time.Time {
 					return time.Unix(1001, 0)
 				}
-				mocks.mockCache.EXPECT().Get(mockCTX, "5abcDEF").Return(&models.URL{
-					URL:      "https://www.google.com",
-					ExpireAt: 1000,
-				}, nil).Times(1)
+				mocks.mockCache.EXPECT().Get(mockCTX, "5abcDEF", gomock.Any()).DoAndReturn(func(ctx context.Context, code string, result interface{}) error {
+					*result.(*models.URL) = models.URL{
+						Code:     "5abcDEF",
+						URL:      "https://www.google.com",
+						ExpireAt: 1000,
+					}
+					return nil
+				}).Times(1)
 			},
 			check: func(t *testing.T, res *models.URL, err error) {
 				assert.ErrorIs(t, err, ErrExpired)
@@ -69,16 +78,17 @@ func TestRedirect(t *testing.T) {
 				timeNow = func() time.Time {
 					return time.Unix(10, 0)
 				}
-				mocks.mockCache.EXPECT().Get(mockCTX, "5abcDEF").Return(nil, cache.ErrNotFound).Times(1)
-				mocks.mockCache.EXPECT().Set(mockCTX, "5abcDEF", nil, nonExistedCacheTTL).Return(nil).Times(1)
+				mocks.mockCache.EXPECT().Get(mockCTX, "5abcDEF", gomock.Any()).Return(cache.ErrNotFound).Times(1)
 
 				u := &models.URL{
 					Code: "5abcDEF",
 				}
-				err := u.ToBSON()
+				err := u.ToModel()
 				assert.NoError(t, err)
 
 				mocks.mockDB.EXPECT().Get(mockCTX, collectionName, u.ID, u).Return(database.ErrNotFound).Times(1)
+
+				mocks.mockCache.EXPECT().Set(mockCTX, "5abcDEF", nil, nonExistedCacheTTL).Return(nil).Times(1)
 			},
 			check: func(t *testing.T, res *models.URL, err error) {
 				assert.ErrorIs(t, err, ErrNotFound)
