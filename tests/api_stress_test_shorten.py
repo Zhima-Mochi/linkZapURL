@@ -29,7 +29,7 @@ def main():
 
     number_of_requests = int(args.number) if args.number else 1000
 
-    url = "http://localhost:9000/api/v1/urls"
+    url = "http://localhost/api/v1/urls"
     data = {
         "expireAt": "2025-02-08T09:20:41Z",
         "url": "https://google.com"

@@ -22,7 +22,7 @@ def main():
     parser.add_argument("-n", "--number", help="Number of requests to be sent", type=int, default=1000)
     args = parser.parse_args()
 
-    url = f"http://localhost:9000/{args.code}"
+    url = f"http://localhost/{args.code}"
 
     with ThreadPoolExecutor(max_workers=10) as executor:
         responses = list(executor.map(lambda _: send_request(url), range(args.number)))

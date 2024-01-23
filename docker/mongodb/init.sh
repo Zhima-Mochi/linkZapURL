@@ -3,8 +3,8 @@
 # Build Docker images
 docker-compose build
 
-# Stop and remove containers
-docker-compose down -v
+# Stop
+docker-compose down
 
 # Start all services
 docker-compose up -d
