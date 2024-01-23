@@ -13,13 +13,23 @@ import (
 )
 
 type impl struct {
+	// client *redis.ClusterClient
 	client *redis.Client
 	config *config.Redis
 }
 
 func NewRedis(config *config.Redis) (cache.Cache, error) {
+	// client := redis.NewClusterClient(&redis.ClusterOptions{
+	// 	Addrs:    config.Addrs,
+	// 	Password: config.Password,
+
+	// 	RouteByLatency: true,
+	// 	RouteRandomly:  true,
+	// })
+
 	client := redis.NewClient(&redis.Options{
-		Addr: config.Addrs[0],
+		Addr:     config.Addrs[0],
+		Password: config.Password,
 	})
 
 	// Ping the primary

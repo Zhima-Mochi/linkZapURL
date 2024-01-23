@@ -42,10 +42,9 @@ func (im *impl) getCollection(collectionName string) *mongo.Collection {
 func (im *impl) Get(ctx context.Context, table string, key int64, result interface{}) error {
 	collection := im.getCollection(table)
 
-	seq := key & 0xFF
 	filter := bson.M{
-		"seq": seq,
-		"ID":  key,
+		"shardID": (key >> 24) % 1000,
+		"ID":      key,
 	}
 
 	err := collection.FindOne(ctx, filter).Decode(result)

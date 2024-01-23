@@ -41,7 +41,7 @@ var (
 
 		var num int64
 
-		for i := 0; i < len(code); i++ {
+		for i := len(code) - 1; i >= 0; i-- {
 			if n, ok := base58alphabetMap[code[i]]; !ok {
 				return 0, ErrInvalidCode
 			} else {
@@ -61,14 +61,14 @@ func init() {
 
 type URL struct {
 	ID       int64  `json:"-" bson:"ID"`
-	Seq      uint8  `json:"-" bson:"seq"`
+	ShardID  int64  `json:"-" bson:"shardID"`
 	Code     string `json:"code" bson:"-"`
 	URL      string `json:"url" bson:"url"`
 	ExpireAt int64  `json:"expireAt" bson:"expireAt"`
 }
 
 func (u *URL) ToBSON() error {
-	u.Seq = getSeq(u)
+	u.ShardID = getShardID(u)
 
 	return nil
 }
@@ -104,8 +104,8 @@ func getCode(u *URL) (string, error) {
 	return code, nil
 }
 
-func getSeq(u *URL) uint8 {
-	return uint8(u.ID & 0xFF)
+func getShardID(u *URL) int64 {
+	return (u.ID >> 24) % 1000
 }
 
 func getID(u *URL) (int64, error) {

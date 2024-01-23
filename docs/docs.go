@@ -114,7 +114,7 @@ const docTemplate = `{
             "properties": {
                 "expireAt": {
                     "type": "string",
-                    "example": "2021-02-08T09:20:41Z"
+                    "example": "2025-02-08T09:20:41Z"
                 },
                 "url": {
                     "type": "string",

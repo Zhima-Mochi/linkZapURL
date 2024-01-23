@@ -1,0 +1,77 @@
+version: '3.9'
+
+services:
+
+  redis-node-1:
+    image: redis:7.2.4
+    container_name: redis-node-1 
+    links:
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+      - redis-node-6
+    command: redis-server --port 6379 --bind 0.0.0.0 --cluster-enabled yes --cluster-node-timeout 5000 --cluster-config-file nodes.conf --requirepass password --masterauth password --protected-mode no
+    restart: always
+    volumes:
+      - redis-node-1-data:/data
+    ports:
+      - "7000:6379"
+
+  redis-node-2:
+    image: redis:7.2.4
+    container_name: redis-node-2
+    command: redis-server --port 6379 --bind 0.0.0.0 --cluster-enabled yes --cluster-node-timeout 5000 --cluster-config-file nodes.conf --requirepass password --masterauth password --protected-mode no
+    restart: always
+    volumes:
+      - redis-node-2-data:/data
+    ports:
+      - "7001:6379"
+  
+  redis-node-3:
+    image: redis:7.2.4
+    container_name: redis-node-3 
+    command: redis-server --port 6379 --bind 0.0.0.0 --cluster-enabled yes --cluster-node-timeout 5000 --cluster-config-file nodes.conf --requirepass password --masterauth password --protected-mode no
+    restart: always
+    volumes:
+      - redis-node-3-data:/data
+    ports:
+      - "7002:6379"
+
+  redis-node-4:
+    image: redis:7.2.4
+    container_name: redis-node-4 
+    command: redis-server --port 6379 --bind 0.0.0.0 --cluster-enabled yes --cluster-node-timeout 5000 --cluster-config-file nodes.conf --requirepass password --masterauth password --protected-mode no
+    restart: always
+    volumes:
+      - redis-node-4-data:/data
+    ports:
+      - "7003:6379"
+  
+  redis-node-5:
+    image: redis:7.2.4
+    container_name: redis-node-5 
+    command: redis-server --port 6379 --bind 0.0.0.0 --cluster-enabled yes --cluster-node-timeout 5000 --cluster-config-file nodes.conf --requirepass password --masterauth password --protected-mode no
+    restart: always
+    volumes:
+      - redis-node-5-data:/data
+    ports:
+      - "7004:6379"
+  
+  redis-node-6:
+    image: redis:7.2.4
+    container_name: redis-node-6 
+    command: redis-server --port 6379 --bind 0.0.0.0 --cluster-enabled yes --cluster-node-timeout 5000 --cluster-config-file nodes.conf --requirepass password --masterauth password --protected-mode no
+    restart: always
+    volumes:
+      - redis-node-6-data:/data
+    ports:
+      - "7005:6379"
+
+volumes:
+  redis-node-1-data:
+  redis-node-2-data:
+  redis-node-3-data:
+  redis-node-4-data:
+  redis-node-5-data:
+  redis-node-6-data:

@@ -111,7 +111,7 @@ func main() {
 
 type ShortenRequest struct {
 	URL           string `json:"url" binding:"required" example:"https://example.com"`
-	ExpireAt      string `json:"expireAt" binding:"required" example:"2021-02-08T09:20:41Z"`
+	ExpireAt      string `json:"expireAt" binding:"required" example:"2025-02-08T09:20:41Z"`
 	ExpireAtInt64 int64  `json:"-" binding:"-"`
 }
 
@@ -172,7 +172,7 @@ func (h *Handler) Shorten(g *gin.Context) {
 // @Description Redirects to the original URL.
 // @Tags URL Redirection
 // @Param code path string true "Shortened URL Code"
-// @Success 301 string string "Moved Permanently"
+// @Success 301 {string} string "Moved Permanently"
 // @Failure 404 {object} map[string]any
 // @Failure 500 {object} map[string]any
 // @Router /{code} [get]
@@ -189,6 +189,8 @@ func (h *Handler) Redirect(g *gin.Context) {
 		g.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	log.Printf("Redirecting to %s", url.URL)
 
 	g.Redirect(http.StatusMovedPermanently, url.URL)
 }

@@ -2,7 +2,7 @@ definitions:
   main.ShortenRequest:
     properties:
       expireAt:
-        example: "2021-02-08T09:20:41Z"
+        example: "2025-02-08T09:20:41Z"
         type: string
       url:
         example: https://example.com

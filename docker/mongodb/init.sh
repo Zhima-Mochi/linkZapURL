@@ -44,3 +44,5 @@ sleep 10
 
 # Execute the final initialization script
 docker-compose exec router01 sh -c "mongosh -u root --authenticationDatabase admin -p password < /scripts/mongo-init.js"
+
+echo "MongoDB Sharded Cluster is ready!"

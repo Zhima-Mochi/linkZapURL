@@ -66,7 +66,7 @@ func (im *impl) Redirect(ctx context.Context, code string) (*models.URL, error) 
 		Code: code,
 	}
 
-	err := u.ToBSON()
+	err := u.ToModel()
 	if err != nil {
 		return nil, err
 	}
