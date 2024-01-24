@@ -19,8 +19,8 @@
 linkZapURL is a URL shortening service. It is a simple service that takes a long URL and returns a short URL. When a user visits the short URL, it will redirect to the long URL.
 
 ## Features
-- Horizontal scalability (sharding)
-- Snowflake ID (timestamp + machineID + sequence)
+- Horizontal scalability (sharding, unique ID generator)
+- Snowflake ID (timestamp + machineID + sequence) as unique ID
 - Cache (including non-exist codes' requests)
 - base58 encoding
 
@@ -72,4 +72,20 @@ cd ./docker/nginx && ./init.sh && cd ../..
 
 ### linkZapURL Service
 - `POST /api/v1/shorten`
+    Request Body:
+    ```json
+    {
+        "url": "<original_url>",
+        "expireAt": "<expired_time>" // format: RFC3339
+    }
+    ```
+    
+    Response Body:
+    ```json
+    {
+        "id": "<code>",
+        "shortUrl": "http://localhost/<code>"
+    }
+    ```
 - `GET /:code`
+   Redirect to the original URL
