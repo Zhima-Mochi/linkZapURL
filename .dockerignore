@@ -3,6 +3,7 @@ README.md
 docker/
 tests/
 docs/design/
+docs/diagrams/
 init.sh
 Dockerfile
 docker-compose*

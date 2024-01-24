@@ -3,6 +3,7 @@ sequenceDiagram
     participant User
     participant Shortening Service
     participant MongoDB
+    participant Redis
     User->>+Shortening Service: Request to shorten URL
     alt Parameter is missing
         Shortening Service-->>User: Error: Parameter is missing
@@ -13,6 +14,7 @@ sequenceDiagram
         MongoDB-->>Shortening Service: Error: Key is duplicated
         Shortening Service-->>User: Error: Internal Server Error
     end
+    MongoDB-->>Redis: Delete key
     MongoDB-->>-Shortening Service: Success
     Shortening Service-->>-User: Return shortened URL Code
 ```

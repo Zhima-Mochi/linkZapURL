@@ -4,7 +4,7 @@
 docker-compose build
 
 # Stop
-docker-compose down
+docker-compose down -v
 
 # Start all services
 docker-compose up -d
