@@ -1,5 +1,20 @@
 # linkZapURL
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Features](#features)
+- [Architecture](#architecture)
+  - [High Level Design](#high-level-design)
+  - [Final Architecture](#final-architecture)
+- [API Sequence Diagram](#api-sequence-diagram)
+    - [Shortening Service](#shortening-service)
+    - [Redirection Service](#redirection-service)
+- [Tech Stack](#tech-stack)
+- [Run](#run)
+- [Endpoints](#endpoints)
+  - [Swagger](#swagger)
+  - [linkZapURL Service](#linkzapurl-service)
+
 ## Introduction
 linkZapURL is a URL shortening service. It is a simple service that takes a long URL and returns a short URL. When a user visits the short URL, it will redirect to the long URL.
 
