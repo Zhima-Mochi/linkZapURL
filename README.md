@@ -4,8 +4,8 @@
 linkZapURL is a URL shortening service. It is a simple service that takes a long URL and returns a short URL. When a user visits the short URL, it will redirect to the long URL.
 
 ## Features
-- Horizontal scalability
-- Snowflake ID
+- Horizontal scalability (sharding)
+- Snowflake ID (timestamp + machineID + sequence)
 - Cache (including non-exist codes' requests)
 - base58 encoding
 
