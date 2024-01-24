@@ -75,6 +75,7 @@ See [config.yaml](./docker/config.yaml).
 
 ### linkZapURL Service
 - `POST /api/v1/shorten`
+
     Request Body:
     ```json
     {
@@ -91,4 +92,5 @@ See [config.yaml](./docker/config.yaml).
     }
     ```
 - `GET /:code`
+
    Redirect to the original URL
