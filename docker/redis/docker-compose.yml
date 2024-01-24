@@ -5,12 +5,85 @@ services:
   redis-node-1:
     image: redis:7.2.4
     container_name: redis-node-1 
-    command: redis-server --port 6379 --bind 0.0.0.0 --requirepass password --masterauth password --protected-mode no
+    links:
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+      - redis-node-6
+    command: redis-server /usr/local/etc/redis/redis.conf --cluster-announce-ip host.docker.internal --cluster-announce-port 7000 --cluster-announce-bus-port 17000 
     restart: always
     volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
       - redis-node-1-data:/data
     ports:
       - "7000:6379"
+      - "17000:16379"
+
+  redis-node-2:
+    image: redis:7.2.4
+    container_name: redis-node-2
+    command: redis-server /usr/local/etc/redis/redis.conf --cluster-announce-ip host.docker.internal --cluster-announce-port 7001 --cluster-announce-bus-port 17001
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-node-2-data:/data
+    ports:
+      - "7001:6379"
+      - "17001:16379"
+  
+  redis-node-3:
+    image: redis:7.2.4
+    container_name: redis-node-3 
+    command: redis-server /usr/local/etc/redis/redis.conf --cluster-announce-ip host.docker.internal --cluster-announce-port 7002 --cluster-announce-bus-port 17002
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-node-3-data:/data
+    ports:
+      - "7002:6379"
+      - "17002:16379"
+
+  redis-node-4:
+    image: redis:7.2.4
+    container_name: redis-node-4 
+    command: redis-server /usr/local/etc/redis/redis.conf --cluster-announce-ip host.docker.internal --cluster-announce-port 7003 --cluster-announce-bus-port 17003
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-node-4-data:/data
+    ports:
+      - "7003:6379"
+      - "17003:16379"
+  
+  redis-node-5:
+    image: redis:7.2.4
+    container_name: redis-node-5 
+    command: redis-server /usr/local/etc/redis/redis.conf --cluster-announce-ip host.docker.internal --cluster-announce-port 7004 --cluster-announce-bus-port 17004
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-node-5-data:/data
+    ports:
+      - "7004:6379"
+      - "17004:16379"
+  
+  redis-node-6:
+    image: redis:7.2.4
+    container_name: redis-node-6 
+    command: redis-server /usr/local/etc/redis/redis.conf --cluster-announce-ip host.docker.internal --cluster-announce-port 7005 --cluster-announce-bus-port 17005
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-node-6-data:/data
+    ports:
+      - "7005:6379"
+      - "17005:16379"
 
 volumes:
   redis-node-1-data:
+  redis-node-2-data:
+  redis-node-3-data:
+  redis-node-4-data:
+  redis-node-5-data:
+  redis-node-6-data:
