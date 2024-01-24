@@ -1,4 +1,4 @@
-# linkZapURL
+# linkZapURL - System Design for URL Shortener Service
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -30,7 +30,7 @@ linkZapURL is a URL shortening service. It is a simple service that takes a long
 ![High Level Design](./docs/design/High_Level_Design.jpeg)
 
 ### Final Architecture
-All of the services are deployed in local machine for demonstration purpose. In production, the services should be deployed in different machines.
+All of the services are deployed in local machine for demonstration purpose. In production, the services should be deployed in different physical or virtual machines.
 
 ![Final Design](./docs/diagrams/linkzapurl_architecture.png)
 
@@ -64,6 +64,9 @@ cd ./docker/nginx && ./init.sh && cd ../..
 ./init.sh
 # Host: http://localhost
 ```
+
+### Configurations
+See [config.yaml](./docker/config.yaml).
 
 ## Endpoints
 
