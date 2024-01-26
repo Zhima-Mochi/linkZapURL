@@ -47,6 +47,16 @@ Unique index: (`shardID`, `ID`).
 
 Redis is used to cache the tiny URL entity. The key is the encoded `ID` of the entity, and the value is the JSON string of the entity (URL and expiration timestamp).
 
+### Base58 Encoding Functions
+
+#### `Encode(num int64) string`
+- Converts a 64-bit integer to a base58 encoded string.
+- Ensures output is up to 7 characters long.
+
+#### `Decode(code string) int64`
+- Converts a base58 encoded string (7 characters) back to a 64-bit integer.
+
+
 ### Final Architecture
 All of the services are deployed in local machine for demonstration purpose. In production, the services should be deployed in different physical or virtual machines.
 
