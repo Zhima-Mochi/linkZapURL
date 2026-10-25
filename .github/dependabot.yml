@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # No routine version-update PRs; security updates remain eligible.
+    open-pull-requests-limit: 0
+    groups:
+      security-fixes:
+        applies-to: security-updates
+        patterns:
+          - "*"
