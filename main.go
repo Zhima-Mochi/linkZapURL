@@ -93,6 +93,11 @@ func main() {
 	}
 
 	router := gin.Default()
+	// Bound request bodies even for chunked uploads to reduce resource exhaustion.
+	router.Use(func(c *gin.Context) {
+		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 1<<20)
+		c.Next()
+	})
 	router.GET("/:code", handler.Redirect)
 
 	apiV1 := router.Group("/api/v1")
@@ -106,7 +111,18 @@ func main() {
 	doc.SwaggerInfo.Description = "A URL shortener service."
 	doc.SwaggerInfo.Version = "1.0"
 
-	router.Run(":8080")
+	// Gin's convenience Run() uses http.ListenAndServe without explicit timeouts.
+	// Cap slow headers, slow bodies and idle sockets at the HTTP server boundary.
+	server := &http.Server{
+		Addr:              ":8080",
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 20,
+	}
+	log.Fatal(server.ListenAndServe())
 }
 
 type ShortenRequest struct {
